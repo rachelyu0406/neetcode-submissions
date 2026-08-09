@@ -1,0 +1,31 @@
+class Solution:
+    def trap(self, height: List[int]) -> int:
+        # more space efifcient two pointer solution:
+        # have left and right pointer, and leftMax and rightMax
+        # water at each positionis max wall on lowest side - height at the position
+        # move the lower side in
+
+        # less space efficient prefix and suffix array solution
+        # height of water at each index i is :
+        # min(maxheight(left), maxheight(right)) - h[i]
+        maxleft = [0] * len(height)
+        maxright = [0] * len(height)
+        curMax = float("-inf")
+        for i in range(len(height)):
+            if height[i] > curMax:
+                curMax = height[i]
+            maxleft[i] = curMax
+        curMax = float("-inf")
+        for j in range(len(height) - 1, -1, -1):
+            if height[j] > curMax:
+                curMax = height[j]
+            maxright[j] = curMax
+        res = 0
+        for i in range(1, len(height) - 1):
+            left = maxleft[i - 1]
+            right = maxright[i + 1]
+            water = min(left, right) - height[i]
+            if water > 0:
+                res += water
+        return res
+        
